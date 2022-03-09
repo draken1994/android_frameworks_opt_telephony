@@ -262,7 +262,14 @@ public class SubscriptionController extends ISub.Stub {
          // FIXME: Remove if listener technique accepted.
          broadcastSimInfoContentChanged();
      }
-
+	 
+     private boolean isNumeric(String str) {
+         for (char c : str.toCharArray()) {
+             if (!Character.isDigit(c)) return false;
+         }
+         return true;
+     }
+	 
     /**
      * New SubInfoRecord instance and fill in detail info
      * @param cursor
@@ -306,6 +313,11 @@ public class SubscriptionController extends ISub.Stub {
                     + " userNwMode:" + userNwMode);
         }
 
+        if (isNumeric(carrierName)) {
+            carrierName = displayName;
+            logd("[getSubInfoRecord] carrierName changed to: " + displayName);
+        }
+		
         // If line1number has been set to a different number, use it instead.
         String line1Number = mTelephonyManager.getLine1Number(id);
         if (!TextUtils.isEmpty(line1Number) && !line1Number.equals(number)) {
